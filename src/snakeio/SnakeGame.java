@@ -26,14 +26,19 @@ public class SnakeGame extends JPanel implements ActionListener {
     int RAND_POS = 29;
     int DELAY = 50;
     int gameState = 1;
+    int winner = 0;
 
     int x[] = new int[AllSquare];
     int y[] = new int[AllSquare];
+    int xE[] = new int[AllSquare];
+    int yE[] = new int[AllSquare];
 
     int dots = 3;
+    int dotsE = 3;
     int apple_x;
     int apple_y;
     int direction = 2;
+    int directionE = 1;
 
     Timer timer;
     Image apple;
@@ -84,6 +89,11 @@ public class SnakeGame extends JPanel implements ActionListener {
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
             y[z] = 50;
+        }
+        
+        for (int z = 0; z < dotsE; z++) {
+            xE[z] = 350 + z * 10;
+            yE[z] = 350;
         }
         
         locateApple();
@@ -147,9 +157,27 @@ public class SnakeGame extends JPanel implements ActionListener {
                     g.drawImage(body, x[z], y[z], this);
                 }
             }
+            
+            for (int z = 0; z < dotsE; z++) {
+                if (z == 0) {
+                    g.drawImage(headE, xE[z], yE[z], this);
+                } else {
+                    g.drawImage(bodyE, xE[z], yE[z], this);
+                }
+            }
 
-            Toolkit.getDefaultToolkit().sync();
+            Toolkit.getDefaultToolkit().sync(); break;
                            
+            case 4:
+                
+                String msg = "Game Over - Winner : Player" + winner;
+                Font small = new Font("Helvetica", Font.BOLD, 14);
+                FontMetrics metr = getFontMetrics(small);
+
+                g.setColor(Color.white);
+                g.setFont(small);
+                g.drawString(msg, (WindowW - metr.stringWidth(msg)) / 2, WindowH / 2);
+            
         }
     }
 
@@ -171,6 +199,7 @@ public class SnakeGame extends JPanel implements ActionListener {
 
             checkApple();
             checkCollision();
+            ERandom();
             move();
             
         }
@@ -185,6 +214,12 @@ public class SnakeGame extends JPanel implements ActionListener {
             dots++;
             locateApple();
         }
+        
+        if ((xE[0] == apple_x) && (yE[0] == apple_y)) {
+
+            dotsE++;
+            locateApple();
+        }
     }
     
     public void move() {
@@ -192,6 +227,11 @@ public class SnakeGame extends JPanel implements ActionListener {
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
+        }
+        
+        for (int z = dotsE; z > 0; z--) {
+            xE[z] = xE[(z - 1)];
+            yE[z] = yE[(z - 1)];
         }
 
         switch(direction){
@@ -201,6 +241,29 @@ public class SnakeGame extends JPanel implements ActionListener {
             case 4 -> y[0] += SquareSize;
         }
         
+        switch(directionE){
+            case 1 -> xE[0] -= SquareSize;
+            case 2 -> xE[0] += SquareSize;
+            case 3 -> yE[0] -= SquareSize;
+            case 4 -> yE[0] += SquareSize;
+        }
+        
+    }
+    
+    public void ERandom() {
+        int chance = (int )(Math.random() * 100 + 1);
+        int dir = (int )(Math.random() * 2);
+        
+        if(chance <= 75){
+            if(dir == 0) {
+                if(xE[0] < apple_x) directionE = 2;
+                else directionE = 1;
+            }
+            else {
+                if(yE[0] < apple_y) directionE = 4;
+                else directionE = 3;
+            }
+        }
     }
 
     public void checkCollision() {
@@ -209,23 +272,31 @@ public class SnakeGame extends JPanel implements ActionListener {
 
             if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
                 gameState = 4;
+                winner = 2;
+            }
+            
+            else if ((xE[0] == x[z]) && (yE[0] == y[z])) {
+                gameState = 4;
+                winner = 1;
+            }
+        }
+        
+        for (int z = dotsE; z > 0; z--) {
+
+            if ((z > 4) && (xE[0] == xE[z]) && (yE[0] == yE[z])) {
+                gameState = 4;
+                winner = 1;
+            }
+            
+            else if ((x[0] == xE[z]) && (y[0] == yE[z])) {
+                gameState = 4;
+                winner = 2;
             }
         }
 
-        if (y[0] >= WindowH) {
+        if (y[0] >= WindowH || y[0] < 0 || x[0] >= WindowW || x[0] < 0) {
             gameState = 4;
-        }
-
-        if (y[0] < 0) {
-            gameState = 4;
-        }
-
-        if (x[0] >= WindowW) {
-            gameState = 4;
-        }
-
-        if (x[0] < 0) {
-            gameState = 4;
+            winner = 2;
         }
         
         if (gameState == 4) {
