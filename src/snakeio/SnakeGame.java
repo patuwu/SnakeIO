@@ -17,27 +17,23 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class SnakeGame extends JPanel /*implements ActionListener*/ {
+public class SnakeGame extends JPanel implements ActionListener {
 
     int WindowW = 400;
     int WindowH = 400;
     int SquareSize = 10;
-    int AllSquare = 900;
+    int AllSquare = 1600;
     int RAND_POS = 29;
     int DELAY = 50;
-    int gameState = 0;
+    int gameState = 1;
 
     int x[] = new int[AllSquare];
     int y[] = new int[AllSquare];
 
-    int dots;
+    int dots = 3;
     int apple_x;
     int apple_y;
-
-    boolean leftDirection = false;
-    boolean rightDirection = true;
-    boolean upDirection = false;
-    boolean downDirection = false;
+    int direction = 2;
 
     Timer timer;
     Image apple;
@@ -74,16 +70,34 @@ public class SnakeGame extends JPanel /*implements ActionListener*/ {
     }
     
     public void initBoard() {
+        addKeyListener(new TAdapter());
         setBackground(Color.black);
         setFocusable(true);
         setLayout(null);
 
         setPreferredSize(new Dimension(WindowW, WindowH));
         loadImages();
-        initWindow();
+        initGame();  
     }
     
-    public void initWindow() {
+    public void initGame()  {
+        for (int z = 0; z < dots; z++) {
+            x[z] = 50 - z * 10;
+            y[z] = 50;
+        }
+        
+        locateApple();
+
+        timer = new Timer(DELAY, this);
+        timer.start();
+    }
+    
+//######################################## BAGIAN TAMPILAN ########################################
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
         switch(gameState){
             case 0:
                 
@@ -120,11 +134,127 @@ public class SnakeGame extends JPanel /*implements ActionListener*/ {
             this.add(execServer);
             this.add(execClient);
             
+            break;
+            
+            case 1:
+                
+            g.drawImage(apple, apple_x, apple_y, this);
+
+            for (int z = 0; z < dots; z++) {
+                if (z == 0) {
+                    g.drawImage(head, x[z], y[z], this);
+                } else {
+                    g.drawImage(body, x[z], y[z], this);
+                }
+            }
+
+            Toolkit.getDefaultToolkit().sync();
+                           
+        }
+    }
+
+//######################################## BAGIAN MEKANISME ########################################
+    
+    public void locateApple() {
+
+        int r = (int) (Math.random() * RAND_POS);
+        apple_x = ((r * SquareSize));
+
+        r = (int) (Math.random() * RAND_POS);
+        apple_y = ((r * SquareSize));
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (gameState == 1) {
+
+            checkApple();
+            checkCollision();
+            move();
+            
+        }
+
+        repaint();
+    }
+    
+    public void checkApple() {
+
+        if ((x[0] == apple_x) && (y[0] == apple_y)) {
+
+            dots++;
+            locateApple();
         }
     }
     
+    public void move() {
+
+        for (int z = dots; z > 0; z--) {
+            x[z] = x[(z - 1)];
+            y[z] = y[(z - 1)];
+        }
+
+        switch(direction){
+            case 1 -> x[0] -= SquareSize; 
+            case 2 -> x[0] += SquareSize;
+            case 3 -> y[0] -= SquareSize;
+            case 4 -> y[0] += SquareSize;
+        }
+        
+    }
+
+    public void checkCollision() {
+
+        for (int z = dots; z > 0; z--) {
+
+            if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
+                gameState = 4;
+            }
+        }
+
+        if (y[0] >= WindowH) {
+            gameState = 4;
+        }
+
+        if (y[0] < 0) {
+            gameState = 4;
+        }
+
+        if (x[0] >= WindowW) {
+            gameState = 4;
+        }
+
+        if (x[0] < 0) {
+            gameState = 4;
+        }
+        
+        if (gameState == 4) {
+            timer.stop();
+        }
+    }
+
+    public class TAdapter extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+            int key = e.getKeyCode();
+
+            if (key == KeyEvent.VK_LEFT){
+                if(direction != 2) direction = 1;
+            }
+
+            if (key == KeyEvent.VK_RIGHT){
+                if(direction != 1) direction = 2;
+            }
+
+            if (key == KeyEvent.VK_UP){
+                if(direction != 4) direction = 3;
+            }
+
+            if (key == KeyEvent.VK_DOWN){
+                if(direction != 3) direction = 4;
+            }
+        }
+    }
 }
-//######################################## BAGIAN TAMPILAN ########################################
-
-
-//######################################## BAGIAN MEKANISME ########################################
