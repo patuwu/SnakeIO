@@ -24,7 +24,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     int SquareSize = 10;
     int AllSquare = 1600;
     int RAND_POS = 29;
-    int DELAY = 50;
+    int DELAY = 100;
     int gameState = 1;
     int winner = 0;
 
