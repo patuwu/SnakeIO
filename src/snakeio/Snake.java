@@ -1,5 +1,6 @@
 package snakeio;
 
+import java.awt.Graphics;
 import java.awt.Image;
 
 public class Snake {
@@ -8,21 +9,50 @@ public class Snake {
     int locY[];
     int length;
     int direction;
-    
+      
     Image head;
     Image body;
     
-    public Snake(int maxSquare, int initSize, int playerNumber){
+    public Snake(int maxSquare, int initSize, int playerNumber, int vPos, Image headImg, Image bodyImg){
         this.direction = 2;
         this.locX = new int[maxSquare];
         this.locY = new int[maxSquare];
         this.length = initSize;
+        this.player = playerNumber;
+        this.head = headImg;
+        this.body = bodyImg;
         
         for (int z = 0; z < length; z++) {
             locX[z] = 50 - z * 10;
-            locY[z] = 50;
+            locY[z] = vPos;
         }
         
+    }
+    
+    public int getX(){
+        return locX[0];
+    }
+    
+    public int getY(){
+        return locY[0];
+    }
+    
+    public int getDir(){
+        return direction;
+    }
+    
+    public void setDir(int dir){
+        direction = dir;
+    }
+    
+    public void paint(Graphics g, SnakeGame game){
+        for (int z = 0; z < length; z++) {
+                if (z == 0) {
+                    g.drawImage(head, locX[z], locY[z], game);
+                } else {
+                    g.drawImage(body, locX[z], locY[z], game);
+                }
+            }
     }
     
     public void move(int SquareSize)   {
@@ -49,7 +79,7 @@ public class Snake {
         else return 0;
     }
     
-    public int checkCollision(Snake enemy){
+    public int checkCollision(Snake enemy, int maxPixel){
         for (int z = length; z > 0; z--) {
 
             if ((z > 4) && (locX[0] == locX[z]) && (locY[0] == locY[z])) {
@@ -63,7 +93,7 @@ public class Snake {
             }
         }
         
-        if (locY[0] >= 400 || locY[0] < 0 || locX[0] >= 400 || locX[0] < 0) {
+        if (locY[0] >= maxPixel || locY[0] < 0 || locX[0] >= maxPixel || locX[0] < 0) {
             return 0;
         }
         
