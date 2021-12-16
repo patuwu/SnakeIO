@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -25,7 +27,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     int AllSquare = 1600;
     int RAND_POS = 29;
     int DELAY = 100;
-    int gameState = 1;
+    int gameState = 0;
     int winner = 0;
     
     Snake Player1;
@@ -44,7 +46,14 @@ public class SnakeGame extends JPanel implements ActionListener {
     JButton execServer = new JButton();;
     JButton execClient = new JButton();;
     JLabel title;
+    
+    String disconnected_name="";
+    String serverip = "";
+    String serverport = "";
 
+    SnakeClient socketClient;
+    SnakeServer socketServer;
+    
     public SnakeGame() {
         
         initBoard();
@@ -139,7 +148,10 @@ public class SnakeGame extends JPanel implements ActionListener {
 
             Player1.paint(g, this);
             Player2.paint(g, this);
-
+            
+            System.out.println(Player1.getXasString());
+            System.out.println(Player2.getXasString());
+            
             Toolkit.getDefaultToolkit().sync(); break;
                            
             case 4:
@@ -156,6 +168,25 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
 //######################################## BAGIAN MEKANISME ########################################
+    
+    public void startserver(){                                             //start server
+	socketServer = new SnakeServer(this);
+	socketServer.start();
+	try {
+            serverip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }						
+    }
+	
+    public void startclient(){											   //start client
+	try {
+            socketClient = new SnakeClient(this,serverip,serverport);
+            socketClient.start();
+	} catch (UnknownHostException e) {
+            e.printStackTrace();
+        }					
+    }
     
     public void locateApple() {
 

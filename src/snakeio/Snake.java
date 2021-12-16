@@ -15,9 +15,9 @@ public class Snake {
     
     public Snake(int maxSquare, int initSize, int playerNumber, int vPos, Image headImg, Image bodyImg){
         this.direction = 2;
-        this.locX = new int[maxSquare];
-        this.locY = new int[maxSquare];
         this.length = initSize;
+        this.locX = new int[initSize];
+        this.locY = new int[initSize];
         this.player = playerNumber;
         this.head = headImg;
         this.body = bodyImg;
@@ -37,12 +37,52 @@ public class Snake {
         return locY[0];
     }
     
+    public int[] getXArray(){
+        return locX;
+    }
+    
+    public int[] getYArray(){
+        return locY;
+    }
+    
+    public String getXasString(){
+        String list = "";
+        for(int z = 0; z < locX.length; z++){
+            list = list + String.valueOf(locX[z]) + ",";
+        }
+        return list;
+    }
+    
+    public String getYasString(){
+        String list = "";
+        for(int z = 0; z < locY.length; z++){
+            list = list + String.valueOf(locY[z]) + ",";
+        }
+        return list;
+    }
+    
+    public int getLength(){
+        return length;
+    }
+    
     public int getDir(){
         return direction;
     }
     
-    public void setDir(int dir){
-        direction = dir;
+    public void setXArray(int[] input){
+        locX = input;
+    }
+    
+    public void setYArray(int[] input){
+        locY = input;
+    }
+    
+    public void setDir(int input){
+        direction = input;
+    }
+    
+    public void setLen(int input){
+        length = input;
     }
     
     public void paint(Graphics g, SnakeGame game){
@@ -56,7 +96,7 @@ public class Snake {
     }
     
     public void move(int SquareSize)   {
-        for (int z = length; z > 0; z--) {
+        for (int z = length-1; z > 0; z--) {
             locX[z] = locX[(z - 1)];
             locY[z] = locY[(z - 1)];
         }
@@ -72,22 +112,32 @@ public class Snake {
     public int checkApple(int x, int y) {
 
         if ((locX[0] == x) && (locY[0] == y)) {
-
+            int[] tempX = locX;
+            int[] tempY = locY;
+            
             length++;
+            locX = new int[length];
+            locY = new int[length];
+            
+            for(int z = 0; z < tempX.length; z++){
+                locX[z] = tempX[z];
+                locY[z] = tempY[z];
+            }
+
             return 1;
         }
         else return 0;
     }
     
     public int checkCollision(Snake enemy, int maxPixel){
-        for (int z = length; z > 0; z--) {
+        for (int z = length-1; z > 0; z--) {
 
-            if ((z > 4) && (locX[0] == locX[z]) && (locY[0] == locY[z])) {
+            if ((locX[0] == locX[z]) && (locY[0] == locY[z])) {
                 return 0;
             }
         }
         
-        for (int z = enemy.length; z > 0; z--)  {
+        for (int z = enemy.length-1; z > 0; z--)  {
             if ((locX[0] == enemy.locX[z]) && (locY[0] == enemy.locY[z])) {
                 return 0;
             }
