@@ -86,12 +86,18 @@ public class SnakeServer extends Thread {
 
         if (game.gameState == 2) {
             if (IP.equals("")) {
-                System.out.println(count);
                 count++;
                 packet2 = p;
                 IP = p.getAddress().toString();
-            } else if (count > 0) {
+                System.out.println(count);
+            try {
+				sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+            }
+            if(count > 0)
                 game.gameState = 1;
+                System.out.println(game.gameState);
             }
         } else if (game.gameState == 1 || game.gameState == 3) {
             if (p.getAddress().toString().equals(IP)) {

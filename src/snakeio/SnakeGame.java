@@ -223,6 +223,7 @@ public class SnakeGame extends JPanel implements ActionListener {
             serverip = InetAddress.getLocalHost().getHostAddress();
             socketClient = new SnakeClient(this,serverip,serverport);
             socketClient.start();
+            socketClient.sendData(("name").getBytes());
             
             gameState=2;
             repaint();
