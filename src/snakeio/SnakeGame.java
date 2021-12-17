@@ -26,7 +26,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     int SquareSize = 10;
     int AllSquare = 1600;
     int RAND_POS = 29;
-    int DELAY = 100;
+    int DELAY = 250;
     int gameState = 0;
     int winner = 0;
     
@@ -46,6 +46,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     JButton execServer = new JButton();;
     JButton execClient = new JButton();;
     JLabel title;
+    JLabel flavor;
     
     String disconnected_name="";
     String serverip = "";
@@ -98,15 +99,23 @@ public class SnakeGame extends JPanel implements ActionListener {
         timer.start();
     }
     
+    public void startGame() {
+        gameState = 1;
+        repaint();
+    }
+    
 //######################################## BAGIAN TAMPILAN ########################################
     
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) { 
         super.paintComponent(g);
+        this.removeAll();
         
         switch(gameState){
-            case 0:
-                
+            case 0:               
+            g.setColor(Color.black);
+            g.fillRect(0, 0, 400, 400);
+            
             title = new JLabel("MULTI SNAKE");
             title.setFont(new java.awt.Font("Segoe UI", 0, 24));
             title.setForeground(new java.awt.Color(255, 255, 255));
@@ -119,11 +128,11 @@ public class SnakeGame extends JPanel implements ActionListener {
             execServer.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
             execServer.setContentAreaFilled(false);
             execServer.setFocusPainted(false);
-            /*execServer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                initServer();
-                }
-            });*/
+            execServer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                startServer();
+            }
+            });
             execServer.setBounds(140, 160, 120, 50);
             
             execClient.setBackground(new java.awt.Color(0, 0, 0));
@@ -139,10 +148,12 @@ public class SnakeGame extends JPanel implements ActionListener {
             this.add(title);
             this.add(execServer);
             this.add(execClient);
-            
             break;
             
             case 1:
+            g.clearRect(0, 0, 400, 400);
+            g.setColor(Color.black);
+            g.fillRect(0, 0, 400, 400);                
                 
             g.drawImage(apple, apple_x, apple_y, this);
 
@@ -154,6 +165,22 @@ public class SnakeGame extends JPanel implements ActionListener {
             
             Toolkit.getDefaultToolkit().sync(); break;
                            
+            case 2:
+            title = new JLabel("WAITING CONNECTION");
+            title.setFont(new java.awt.Font("Segoe UI", 0, 24));
+            title.setForeground(new java.awt.Color(255, 255, 255));
+            title.setBounds(70, 50, 260, 40);
+            
+            flavor = new JLabel("MULTI SNAKE");
+            flavor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            flavor.setForeground(new java.awt.Color(255, 255, 255));
+            flavor.setBounds(130, 100, 140, 30);
+            
+            this.add(title);
+            this.add(flavor);
+            
+            break;
+            
             case 4:
                 
                 String msg = "Game Over - Winner : Player" + winner;
@@ -169,17 +196,19 @@ public class SnakeGame extends JPanel implements ActionListener {
 
 //######################################## BAGIAN MEKANISME ########################################
     
-    public void startserver(){                                             //start server
+    public void startServer(){                                             //start server
 	socketServer = new SnakeServer(this);
 	socketServer.start();
 	try {
             serverip = InetAddress.getLocalHost().getHostAddress();
+            gameState = 2;
+            repaint();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }						
     }
 	
-    public void startclient(){											   //start client
+    public void startClient(){											   //start client
 	try {
             socketClient = new SnakeClient(this,serverip,serverport);
             socketClient.start();
@@ -200,8 +229,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (gameState == 1) {
-
+        if (gameState == 1) {          
             if(Player1.checkApple(apple_x, apple_y) == 1) {locateApple();}
             if(Player2.checkApple(apple_x, apple_y) == 1) {locateApple();}
             ERandom();
@@ -210,9 +238,8 @@ public class SnakeGame extends JPanel implements ActionListener {
             Player1.move(SquareSize);
             Player2.move(SquareSize);
             
+            repaint();
         }
-
-        repaint();
     }
         
     public void ERandom() {

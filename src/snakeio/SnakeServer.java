@@ -30,7 +30,7 @@ public class SnakeServer extends Thread{
     public SnakeServer(SnakeGame game) {
         this.game = game;
         try {
-            socket = new DatagramSocket(8000);
+            socket = new DatagramSocket(8001);
         } catch (SocketException ex) {
             Logger.getLogger(SnakeClient.class.getName()).log(Level.SEVERE, null, ex);
         }
