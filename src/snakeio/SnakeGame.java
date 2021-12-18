@@ -27,7 +27,7 @@ public class SnakeGame extends JPanel implements ActionListener {
 	int SquareSize = 10;
 	int AllSquare = 1600;
 	int RAND_POS = 29;
-	int DELAY = 250;
+	int DELAY = 100;
 	int gameState = 0;
 	int winner = 0;
 	int player;
@@ -102,8 +102,6 @@ public class SnakeGame extends JPanel implements ActionListener {
 	public void initGame() {
 		Player1 = new Snake(AllSquare, 4, 1, 50, head, body);
 		Player2 = new Snake(AllSquare, 4, 2, 350, headE, bodyE);
-
-		locateApple();
 
 		timer = new Timer(DELAY, this);
 		timer.start();
@@ -204,6 +202,8 @@ public class SnakeGame extends JPanel implements ActionListener {
 //######################################## BAGIAN MEKANISME ########################################
 
 	public void startServer() { // start server
+
+		locateApple();
 		player = 1;
 		socketServer = new SnakeServer(this);
 		socketServer.start();
@@ -222,7 +222,6 @@ public class SnakeGame extends JPanel implements ActionListener {
 		serverip = JOptionPane.showInputDialog("Enter server's ip address: ");
 		if (serverip != null) {
 			try {
-				serverip = InetAddress.getLocalHost().getHostAddress();
 				socketClient = new SnakeClient(this, serverip, serverport);
 				socketClient.start();
 				socketClient.sendData(("name").getBytes());
