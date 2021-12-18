@@ -113,10 +113,7 @@ public class SnakeServer extends Thread {
 					intLocY[z] = Integer.parseInt(dataLocY[z]);
 				}
 
-				game.Player2.setXArray(intLocX);
-				game.Player2.setYArray(intLocY);
 				game.Player2.setDir(Integer.parseInt(data[2]));
-				game.Player2.setLen(Integer.parseInt(data[3]));
 
 				if (p2_elapsedTime < 2000) {
 					p2_startTime = System.currentTimeMillis();

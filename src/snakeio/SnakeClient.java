@@ -63,18 +63,30 @@ class SnakeClient extends Thread {
 		} else if (game.gameState == 1 || game.gameState == 4) {
 			String[] dataLocX1 = data[0].split(",");
 			String[] dataLocY1 = data[1].split(",");
+			String[] dataLocX2 = data[2].split(",");
+			String[] dataLocY2 = data[3].split(",");
 			int[] intLocX1 = new int[dataLocX1.length];
 			int[] intLocY1 = new int[dataLocY1.length];
-
+			int[] intLocX2 = new int[dataLocX2.length];
+			int[] intLocY2 = new int[dataLocY2.length];
+			
 			for (int z = 0; z < dataLocX1.length; z++) {
 				intLocX1[z] = Integer.parseInt(dataLocX1[z]);
 				intLocY1[z] = Integer.parseInt(dataLocY1[z]);
 			}
 
+			for (int z = 0; z < dataLocX2.length; z++) {
+				intLocX2[z] = Integer.parseInt(dataLocX2[z]);
+				intLocY2[z] = Integer.parseInt(dataLocY2[z]);
+			}
+			
 			game.Player1.setXArray(intLocX1);
 			game.Player1.setYArray(intLocY1);
+			game.Player2.setXArray(intLocX2);
+			game.Player2.setYArray(intLocY2);
 			game.Player1.setLen(Integer.valueOf(data[4]));
 			game.Player1.setDir(Integer.valueOf(data[5]));
+			game.Player2.setLen(Integer.valueOf(data[6]));
 			game.apple_x = Integer.valueOf(data[8]);
 			game.apple_y = Integer.valueOf(data[9]);
 			game.gameState = Integer.valueOf(data[10]);
