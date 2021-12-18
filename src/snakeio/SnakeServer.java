@@ -101,7 +101,7 @@ public class SnakeServer extends Thread {
 				System.out.println(game.gameState);
 				sendData("start".getBytes(), packet2.getAddress(), packet2.getPort());
 			}
-		} else if (game.gameState == 1 || game.gameState == 3) {
+		} else if (game.gameState == 1 || game.gameState == 4) {
 			if (p.getAddress().toString().equals(IP)) {
 				String[] dataLocX = data[0].split(",");
 				String[] dataLocY = data[1].split(",");

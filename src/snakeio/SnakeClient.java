@@ -91,8 +91,6 @@ class SnakeClient extends Thread {
 		params = params + String.valueOf(game.Player2.getYasString()) + " ";
 		params = params + String.valueOf(game.Player2.getDir()) + " ";
 		params = params + String.valueOf(game.Player2.getLength()) + " ";
-		params = params + String.valueOf(game.gameState) + " ";
-		params = params + String.valueOf(game.winner) + " ";
 
 		sendData(params.getBytes());
 	}

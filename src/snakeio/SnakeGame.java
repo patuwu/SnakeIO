@@ -265,7 +265,9 @@ public class SnakeGame extends JPanel implements ActionListener {
 			Player2.move(SquareSize);
 
 			repaint();
-
+		}
+		
+		if ( gameState == 1 || gameState == 4){
 			if (player == 1) {
 				socketServer.sendParameters();
 			} else {
