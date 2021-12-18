@@ -162,10 +162,10 @@ public class SnakeGame extends JPanel implements ActionListener {
 			Player1.paint(g, this);
 			Player2.paint(g, this);
 
-			System.out.println(Player1.getXasString());
-			System.out.println(Player1.getYasString());
-			System.out.println(Player2.getXasString());
-			System.out.println(Player1.getYasString());
+//			System.out.println(Player1.getXasString());
+//			System.out.println(Player1.getYasString());
+//			System.out.println(Player2.getXasString());
+//			System.out.println(Player1.getYasString());
 
 			Toolkit.getDefaultToolkit().sync();
 			break;

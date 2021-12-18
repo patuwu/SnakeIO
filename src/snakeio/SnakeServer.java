@@ -31,7 +31,7 @@ public class SnakeServer extends Thread {
 		this.game = game;
 		try {
 			socket = new DatagramSocket(8000);
-			System.out.println("made " + game.player);
+//			System.out.println("SERVER START - " + game.player);
 		} catch (SocketException ex) {
 			Logger.getLogger(SnakeClient.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -45,7 +45,7 @@ public class SnakeServer extends Thread {
 			DatagramPacket packet = new DatagramPacket(data, data.length);
 			try {
 				socket.receive(packet);
-				System.out.println("run");
+//				System.out.println("THREAD RUN");
 				extract(packet);
 
 			} catch (IOException ex) {
@@ -90,7 +90,6 @@ public class SnakeServer extends Thread {
 				count++;
 				packet2 = p;
 				IP = p.getAddress().toString();
-				System.out.println(count);
 				try {
 					sleep(1000);
 				} catch (InterruptedException e) {
@@ -98,22 +97,11 @@ public class SnakeServer extends Thread {
 				}
 				if (count > 0)
 					game.gameState = 1;
-				System.out.println(game.gameState);
 				sendData("start".getBytes(), packet2.getAddress(), packet2.getPort());
 			}
 		} else if (game.gameState == 1 || game.gameState == 4) {
 			if (p.getAddress().toString().equals(IP)) {
-				String[] dataLocX = data[0].split(",");
-				String[] dataLocY = data[1].split(",");
-				int[] intLocX = new int[dataLocX.length];
-				int[] intLocY = new int[dataLocY.length];
-
-				for (int z = 0; z < dataLocX.length; z++) {
-					intLocX[z] = Integer.parseInt(dataLocX[z]);
-					intLocY[z] = Integer.parseInt(dataLocY[z]);
-				}
-
-				game.Player2.setDir(Integer.parseInt(data[2]));
+				game.Player2.setDir(Integer.parseInt(data[0]));
 
 				if (p2_elapsedTime < 2000) {
 					p2_startTime = System.currentTimeMillis();
