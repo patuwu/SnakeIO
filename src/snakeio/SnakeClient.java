@@ -60,24 +60,15 @@ class SnakeClient extends Thread {
 
 		if (data[0].equals("start")) {
 			game.gameState = 1;
-		} else if (game.gameState == 1) {
+		} else if (game.gameState == 1 || game.gameState == 4) {
 			String[] dataLocX1 = data[0].split(",");
 			String[] dataLocY1 = data[1].split(",");
-			String[] dataLocX2 = data[2].split(",");
-			String[] dataLocY2 = data[3].split(",");
 			int[] intLocX1 = new int[dataLocX1.length];
 			int[] intLocY1 = new int[dataLocY1.length];
-			int[] intLocX2 = new int[dataLocX2.length];
-			int[] intLocY2 = new int[dataLocY2.length];
 
 			for (int z = 0; z < dataLocX1.length; z++) {
 				intLocX1[z] = Integer.parseInt(dataLocX1[z]);
 				intLocY1[z] = Integer.parseInt(dataLocY1[z]);
-			}
-
-			for (int z = 0; z < dataLocX2.length; z++) {
-				intLocX2[z] = Integer.parseInt(dataLocX2[z]);
-				intLocY2[z] = Integer.parseInt(dataLocY2[z]);
 			}
 
 			game.Player1.setXArray(intLocX1);
@@ -91,8 +82,7 @@ class SnakeClient extends Thread {
 
 			if (data.length == 13)
 				game.disconnected_name = data[12];
-		} else if (game.gameState == 4)
-			game.gameState = Integer.valueOf(data[10]);
+		} 
 	}
 
 	public void sendParameters() {
